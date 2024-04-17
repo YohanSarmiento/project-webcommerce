@@ -1,0 +1,22 @@
+.thumbnail{/*para store.html...placeholder.png....*/
+  /* border: 2px rgb(1, 156, 35) solid; */
+width: 100%;
+height: 200px;
+-webkit-box-shadow: -1px -3px 5px -2px rgba(214,214,214,1);
+  -moz-box-shadow: -1px -3px 5px -2px rgba(214,214,214,1);
+  box-shadow: -1px -3px 5px -2px rgba(214,214,214,1);
+}
+
+.btn-category-nav {
+  background-color: #e8da11;
+  color: rgb(0, 0, 0);
+
+}
+
+.btn-category-nav:hover {
+  cursor: pointer;
+  background-color: #4cebe8;
+  color: hsl(0, 0%, 100%);
+
+}
+
