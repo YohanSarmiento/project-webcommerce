@@ -15,8 +15,19 @@ def index(request):
 
 def productos(request):
     # Lógica para obtener y mostrar todos los productos disponibles
+    # Obtener todos los productos
     productos = Producto.objects.all()
-    return render(request, 'productos.html', {'productos': productos})
+    # Filtrar por nombre
+    search_nombre = request.GET.get('search_nombre')
+    if search_nombre:
+        productos = productos.filter(nombre__icontains=search_nombre)
+    # Filtrar por categoría
+    search_categoria = request.GET.get('search_categoria')
+    if search_categoria:
+        productos = productos.filter(categorias__id=search_categoria)
+    # Obtener todas las categorías para el formulario de búsqueda
+    categorias = Categoria.objects.all()
+    return render(request, 'productos.html', {'productos': productos, 'categorias': categorias})
 
 #def add_producto(request):
 #    # Lógica para obtener y mostrar todos los productos disponibles

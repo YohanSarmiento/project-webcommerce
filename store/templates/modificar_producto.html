@@ -3,30 +3,52 @@
 {% load static %}
 
 {% block head %}
-<!-- <script type="text/javascript" src="{% static 'js/index.js' %}"></script> -->
 <meta charset="UTF-8">
 <title>Modificar Producto</title>
-<link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-
 {% endblock head %}
 
 {% block body %}
-    <div class="container mt-5">
-        <h1 class="mb-4">Modificar Producto</h1>
-        <form method="POST">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-        </form>
-    </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-    <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- <script type="text/javascript" src="{% static 'js/home.js' %}"></script> -->
-</body>
-
-
+<div class="container mt-5">
+    <h1 class="mb-4">Modificar Producto</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="id_nombre">Nombre:</label>
+            <input type="text" class="form-control" id="id_nombre" name="nombre" value="{{ form.nombre.value }}">
+        </div>
+        <div class="form-group">
+            <label for="id_descripcion">Descripción:</label>
+            <textarea class="form-control" id="id_descripcion" name="descripcion" rows="3">{{ form.descripcion.value }}</textarea>
+        </div>
+        <div class="form-group">
+            <label for="id_precio">Precio:</label>
+            <input type="number" class="form-control" id="id_precio" name="precio" value="{{ form.precio.value }}">
+        </div>
+        <div class="form-group">
+            <label for="id_stock">Stock:</label>
+            <input type="number" class="form-control" id="id_stock" name="stock" value="{{ form.stock.value }}">
+        </div>
+        <div class="form-group">
+            <label for="id_proveedor">Proveedor:</label>
+            <select class="form-control" id="id_proveedor" name="proveedor">
+                {% for proveedor in form.proveedor.choices %}
+                <option value="{{ proveedor.0 }}" {% if proveedor.0 == form.proveedor.value %} selected {% endif %}>{{ proveedor.1 }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="id_categorias">Categorías:</label>
+            <select class="form-control" id="id_categorias" name="categorias" multiple>
+                {% for categoria in form.categorias.choices %}
+                <option value="{{ categoria.0 }}" {% if categoria.0 in form.categorias.value %} selected {% endif %}>{{ categoria.1 }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+    </form>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 {% endblock %}

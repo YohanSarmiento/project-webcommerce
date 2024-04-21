@@ -19,6 +19,35 @@
             <!-- Botón para agregar producto -->
             <a class="agregar-producto" href="{% url 'add_producto' %}">Agregar Producto</a>
         </div>
+        <!-- Formulario de búsqueda por nombre -->
+        <form method="GET" class="mb-4">
+            <div class="input-group">
+                <input type="text" class="form-control" id="search_nombre" name="search_nombre" placeholder="Buscar por Nombre">
+                <div class="input-group-append">
+                    <button type="submit" class="btn btn-primary">Buscar</button>
+                </div>
+            </div>
+        </form>
+
+        <!-- Formulario de búsqueda por categoría -->
+        <form method="GET" class="mb-4">
+            <div class="input-group">
+                <select class="custom-select" id="search_categoria" name="search_categoria">
+                    <option value="" selected>Selecciona una categoría</option>
+                    {% for categoria in categorias %}
+                    <option value="{{ categoria.id }}">{{ categoria.nombre }}</option>
+                    {% endfor %}
+                </select>
+                <div class="input-group-append">
+                    <button type="submit" class="btn btn-primary">Buscar</button>
+                </div>
+            </div>
+            <!-- Separación entre los botones de búsqueda y el de resetear -->
+            <div class="mt-2">
+                <button type="submit" class="btn btn-secondary">Mostrar Todos</button>
+            </div>
+        </form>
+        <!-- Lista de productos -->
         <h2>Productos</h2>
         <div class="row gy-3">
             {% for producto in productos %}
