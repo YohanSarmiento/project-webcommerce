@@ -40,6 +40,8 @@ class Cliente(models.Model):
     telefono = models.CharField(max_length=20)
     correo_electronico = models.EmailField()
     contraseña = models.CharField(max_length=100)
+    es_cliente = models.BooleanField(default=True)  # Indica si es un cliente
+    es_administrador = models.BooleanField(default=False)  # Indica si es un administrador
 
     def __str__(self):
         return f"{self.nombre} {self.apellido}"

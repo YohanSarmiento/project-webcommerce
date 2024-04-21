@@ -1,5 +1,5 @@
 from django import forms
-from .models import Producto, Proveedor, Categoria
+from .models import Producto, Proveedor, Categoria, Cliente
 
 class AgregarProductoForm(forms.ModelForm):
     class Meta:
@@ -20,3 +20,13 @@ class ModificarProductoForm(forms.ModelForm):
     class Meta:
         model = Producto
         fields = ['nombre', 'descripcion', 'precio', 'stock', 'proveedor', 'categorias']
+        
+class ClienteForm(forms.ModelForm):
+    class Meta:
+        model = Cliente
+        fields = ['nombre', 'apellido', 'direccion', 'telefono', 'correo_electronico', 'contraseña']
+        
+class ProveedorForm(forms.ModelForm):
+    class Meta:
+        model = Proveedor
+        fields = ['nombre', 'direccion', 'telefono', 'correo_electronico']

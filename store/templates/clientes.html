@@ -1,0 +1,85 @@
+{% extends "master.html" %}
+
+{% load static %}
+
+{% block head %}
+
+<meta charset="UTF-8">
+<title>Lista de Clientes</title>
+<link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">
+<!-- <script type="text/javascript" src="{% static 'js/index.js' %}"></script> -->
+
+{% endblock head %}
+
+{% block body %}
+
+<!-- Template para ver la lista de clientes -->
+<body>
+    <div class="container mt-5">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h1>Lista de Clientes</h1>
+            <a href="{% url 'agregar_cliente' %}" class="btn btn-primary">Agregar Cliente</a>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Dirección</th>
+                    <th>Teléfono</th>
+                    <th>Correo Electrónico</th>
+                    <th>Acciones</th>  <!-- Columna para botones de Actualizar y Eliminar -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for cliente in clientes %}
+                <tr>
+                    <td>{{ cliente.nombre }}</td>
+                    <td>{{ cliente.apellido }}</td>
+                    <td>{{ cliente.direccion }}</td>
+                    <td>{{ cliente.telefono }}</td>
+                    <td>{{ cliente.correo_electronico }}</td>
+                    
+                    <td>
+                        <!-- Botón de Actualizar -->
+                        <a href="{% url 'actualizar_cliente' cliente.id %}" class="btn btn-secondary">Actualizar</a>
+                        <!-- Botón de Eliminar -->
+                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmarEliminar{{ cliente.id }}">
+                            Eliminar
+                        </button>
+
+                        <!-- Modal de confirmación para eliminar -->
+                        <div class="modal fade" id="confirmarEliminar{{ cliente.id }}" tabindex="-1" role="dialog" aria-labelledby="confirmarEliminar{{ cliente.id }}Label" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="confirmarEliminar{{ cliente.id }}Label">Confirmar Eliminación</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>¿Estás seguro de que deseas eliminar el cliente "{{ cliente.nombre }} {{ cliente.apellido }}"?</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                        <form action="{% url 'eliminar_cliente' cliente.id %}" method="post" style="display: inline;">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-danger">Eliminar</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</body>
+{% endblock %}
