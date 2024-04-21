@@ -35,9 +35,6 @@
               <li class="nav-item">
                 <a class="nav-link" href="#">Log in</a>
               </li>
-              <li class="nav-item">
-                <a class="nav-link disabled" aria-disabled="true">Disabled</a>
-              </li>
             </ul>
             <form class="d-flex" role="search">
               <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
@@ -46,7 +43,7 @@
             <div class="mx-3">
               <img class="bi pe-none me-2" src="{% static 'images/shopping-cart.png' %}" alt="Bootstrap" width="36"
               height="36">
-              <a href="#" class="text-white">Cart</a>
+              <a href="{% url 'view_cart' %}" class="text-white">Cart</a>
 
             </div>
           </div>

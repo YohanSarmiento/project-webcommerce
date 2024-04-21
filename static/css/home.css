@@ -20,3 +20,28 @@ height: 200px;
 
 }
 
+.main_storeImg  {
+  margin-top: 0px;
+  padding-top: opx;
+  background: url("/static/images/main_store.jpg") 50% 0 no-repeat fixed; 
+  background-position: center; 
+  background-size: cover;}
+
+.mainImg{
+  width: 1411px;
+  height: 719px;
+}
+
+.main_page{
+  height: 600px;
+}
+.btn_view_roducts{
+  margin-top: 450px;
+  margin-left: 550px;
+  /* padding-bottom: 50px; */
+}
+.btn_contact{
+  margin-top: 450px;
+  margin-left: 30px;
+  /* padding-bottom: 50px; */
+}

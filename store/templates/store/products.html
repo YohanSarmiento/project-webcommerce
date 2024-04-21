@@ -1,0 +1,59 @@
+{% extends "master.html" %}
+
+{% load static %}
+
+{% block head %}
+<title>Home | Products</title>
+<!-- <script type="text/javascript" src="{% static 'js/index.js' %}"></script> -->
+<link rel="stylesheet" type="text/css" href="{% static 'css/products.css' %}">
+
+{% endblock head %}
+
+{% block body %}
+
+<body>
+    <div class="container-lg my-0 mx-0">
+        <div class="row gy-3"> <!-- manually change gutter using g{d}-{n} -->
+            <div class="col-sm-4 col-lg-3">
+                <div class="d-flex flex-column flex-shrink-0 p-3 bg-body-tertiary" style="width: 280px;">
+                    <ul class="list-group">
+                        {% for category in categories %}
+                        <li class="list-group-item list-group-item-action ">
+                            <a href="#" class="list-group-item list-group-item-action btn-category-nav"
+                                onclick="getProducts('{{ category.id }}')">
+                                <img class="bi pe-none me-2" src="{% static 'images/products.png' %}" alt="Bootstrap"
+                                    width="16" height="16">
+                                {{ category.name }}</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+            </div>
+            <div class="col-sm-4 col-lg-9">
+                <div class="row" id="product-container">
+                    {% for product in products %}
+                    <div class="card" style="width: 18rem;">
+                        <img src="{{product.imageURL}}" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">{{product.name}}</h5>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk
+                                of the card's content.</p>
+                            <h4 style="display: inline-block; float: right">
+                                <strong>${{product.price|floatformat:2}}</strong>
+                            </h4>
+                            <button class="btn btn-outline-primary add-btn" id="product-info" data-product-id="{{ product.id }}" onclick="addToCart('{{ product.id }}')">Comprar</button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="{% static 'js/products.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/cart.js' %}"></script>
+</body>
+{% endblock %}

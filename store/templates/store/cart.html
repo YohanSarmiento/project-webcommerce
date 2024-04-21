@@ -1,0 +1,59 @@
+{% extends "master.html" %}
+
+{% load static %}
+
+{% block head %}
+<title>Home | Flight</title>
+<!-- <script type="text/javascript" src="{% static 'js/index.js' %}"></script> -->
+<link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">
+
+{% endblock head %}
+
+{% block body %}
+
+<body>
+  <div class="container mt-5">
+      <h1>Your Cart</h1>
+      <table class="table">
+          <thead>
+              <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Product Name</th>
+                  <th scope="col">Price</th>
+                  <th scope="col">Quantity</th>
+                  <th scope="col">Total</th>
+                  <th scope="col">Image</th>
+                  <th scope="col"></th>
+              </tr>
+          </thead>
+          <tbody>
+            {% for item in cart_items %}
+            <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td>{{ item.product.name }}</td>
+                <td>${{ item.product.price }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>${{ item.get_total }}</td>
+                <td><div style="flex:2"><img class="row-image" src="{{item.product.imageURL}}"></div>
+                <td>
+                    <form action="{% url 'remove_from_cart' %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="item_id" value="{{ item.id }}">
+                        <button type="submit" class="btn btn-danger">Remove</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+      </table>
+      <div class="text-end">
+          <h4>Total: ${{ total_price }}</h4>
+          <button class="btn btn-primary">Checkout</button>
+      </div>
+  </div>
+
+  <!-- Bootstrap Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.4.1/dist/js/bootstrap.bundle.min.js"></script>
+  <script type="text/javascript" src="{% static 'js/cart.js' %}"></script>
+</body>
+{% endblock %}

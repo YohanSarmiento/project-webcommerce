@@ -52,7 +52,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'project_webcommerce.urls'
-TEMPLATE_DIR = os.path.join(BASE_DIR,'store', 'templates')
+TEMPLATE_DIR = os.path.join(BASE_DIR,'templates')
 
 TEMPLATES = [
     {
