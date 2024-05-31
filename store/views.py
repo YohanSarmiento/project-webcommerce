@@ -4,6 +4,11 @@ from django.http import HttpResponse
 from .models import *
 from .forms import *
 from django.contrib import messages 
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
+from io import BytesIO
+import csv
 
 def home(request):
     return render(request, 'home.html')
@@ -191,3 +196,73 @@ def eliminar_proveedor(request, proveedor_id):
     else:
         proveedor = Proveedor.objects.get(pk=proveedor_id)
         return render(request, 'confirmar_eliminar_proveedor.html', {'proveedor': proveedor})
+    
+# ========================================== Inventario =============================================
+def invetario(request):
+    productos = Producto.objects.all()
+    # Filtrar por nombre
+    search_nombre = request.GET.get('search_nombre')
+    if search_nombre:
+        productos = productos.filter(nombre__icontains=search_nombre)
+    # Filtrar por categoría
+    search_categoria = request.GET.get('search_categoria')
+    if search_categoria:
+        productos = productos.filter(categorias__id=search_categoria)
+    # Obtener todas las categorías para el formulario de búsqueda
+    categorias = Categoria.objects.all()
+    return render(request, 'invetario.html', {'productos': productos, 'categorias': categorias})
+
+def generar_reporte_inventario(request):
+    # Obtener el formato deseado del reporte (pdf, csv o txt)
+    formato = request.GET.get('formato', 'pdf')
+    # Obtener todos los productos
+    productos = Producto.objects.all()
+    if formato == 'pdf':
+        # Generar el reporte en formato PDF
+        buffer = BytesIO()
+        pdf = SimpleDocTemplate(buffer, pagesize=letter)
+        data = [['Nombre', 'Precio', 'Stock', 'Proveedor']]
+        for producto in productos:
+            data.append([producto.nombre, producto.precio, producto.stock, producto.proveedor])
+        tabla = Table(data)
+        estilo = TableStyle([('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+                             ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                             ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                             ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                             ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+                             ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+                             ('GRID', (0, 0), (-1, -1), 1, colors.black)])
+        tabla.setStyle(estilo)
+        elementos = [tabla]
+        pdf.build(elementos)
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="reporte_inventario.pdf"'
+        response.write(buffer.getvalue())
+        buffer.close()
+        return response
+    elif formato == 'csv':
+        # Generar el reporte en formato CSV
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="reporte_inventario.csv"'
+        writer = csv.writer(response)
+        writer.writerow(['Nombre', 'Precio', 'Stock', 'Proveedor'])
+        for producto in productos:
+            writer.writerow([producto.nombre, producto.precio, producto.stock, producto.proveedor])
+        return response
+    elif formato == 'txt':
+        # Generar el reporte en formato texto plano
+        contenido_reporte = "Reporte de Inventario:\n\n"
+        for producto in productos:
+            contenido_reporte += f"Nombre: {producto.nombre}\n"
+            contenido_reporte += f"Precio: {producto.precio}\n"
+            contenido_reporte += f"Stock: {producto.stock}\n"
+            contenido_reporte += f"Proveedor: {producto.proveedor}\n"
+            contenido_reporte += "--------------------------\n"
+        response = HttpResponse(content_type='text/plain')
+        response['Content-Disposition'] = 'attachment; filename="reporte_inventario.txt"'
+        response.write(contenido_reporte)
+        return response
+    else:
+        # Manejar un formato no válido
+        return HttpResponse("Formato de reporte no válido.")
+

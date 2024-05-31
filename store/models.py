@@ -1,5 +1,6 @@
 from django.db import models
-
+from django.contrib.auth.models import User
+from datetime import datetime
 
 # Create your models here.
 
@@ -64,5 +65,14 @@ class DetallePedido(models.Model):
     def __str__(self):
         return f"Pedido {self.pedido.id} - Producto: {self.producto.nombre} - Cantidad: {self.cantidad}"
     
-    
+class HistorialCambioProducto(models.Model):
+    producto = models.ForeignKey('Producto', on_delete=models.CASCADE)
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    fecha_cambio = models.DateTimeField(default=datetime.now)
+    campo_modificado = models.CharField(max_length=100)
+    valor_anterior = models.CharField(max_length=255)
+    valor_nuevo = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f"{self.producto.nombre} - {self.campo_modificado} - {self.fecha_cambio}"
 

@@ -21,16 +21,25 @@
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="{% url 'login' %}">Home</a>
+                <a class="nav-link active" aria-current="page" href="{% url 'login' %}">HOME</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="{% url 'productos' %}">Products</a>
+                <a class="nav-link" href="{% url 'productos' %}">PRODUCTOS</a>
               </li>
-              <li class="nav-item">
+              <!-- <li class="nav-item">
                 <a href="{% url 'clientes' %}" class='nav-link'>Clientes</a>
+              </li> -->
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'proveedores' %}">PROVEEDORES</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="{% url 'proveedores' %}">Proveedores</a>
+                <a class="nav-link" href="{% url 'inventario' %}">INVENTARIO</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">HISTORIAL INVENTARIO</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">HISTORIAL PEDIDOS</a>
               </li>
             </ul>
             <form class="d-flex" role="search">

@@ -5,7 +5,7 @@
 {% block head %}
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Login</title>
+<title>Home</title>
 <!-- Agrega tus estilos CSS aquí si los tienes -->
 
 <link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">
@@ -14,7 +14,40 @@
 {% endblock head %}
 
 {% block body %}
+<!-- Aquí agregamos las pestañas -->
+<body>
+    <div class="container-lg my-5">
+        <div class="row">
+            <!-- Opción 1: Productos -->
+            <div class="col-md-6">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <a href="{% url 'productos' %}" class="btn btn-primary btn-lg">PRODUCTOS</a>
+                    </div>
+                </div>
+            </div>
+            <!-- Opción 2: Proveedores -->
+            <div class="col-md-6">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <a href="{% url 'proveedores' %}" class="btn btn-primary btn-lg">PROVEEDORES</a>
+                    </div>
+                </div>
+            </div>
+            <!-- Opción 3: Inventario -->
+            <div class="col-md-6 mt-3">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <a href="{% url 'inventario' %}" class="btn btn-primary btn-lg">INVENTARIO</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+{% endblock %}
 
+<!--
 <body>
     <div class="container mt-5">
         <h1>Login</h1>
@@ -31,11 +64,11 @@
             <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
         </form>
     </div>
-    <!-- Agrega tus scripts JS aquí si los necesitas -->
+     Agrega tus scripts JS aquí si los necesitas 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- <script type="text/javascript" src="{% static 'js/home.js' %}"></script> -->
+    <script type="text/javascript" src="{% static 'js/home.js' %}"></script> 
 </body>
-{% endblock %}
+-->

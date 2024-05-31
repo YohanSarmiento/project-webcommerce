@@ -15,10 +15,13 @@ urlpatterns = [
     path('agregar_cliente/', views.agregar_cliente, name='agregar_cliente'),
     path('cliente/<int:cliente_id>/modificar/', views.actualizar_cliente, name='actualizar_cliente'),
     path('cliente/<int:cliente_id>/eliminar/', views.eliminar_cliente, name='eliminar_cliente'),
-#    path('productos/cliente/', views.productos_cliente, name='productos_cliente'),  # Página de productos para clientes
     path('proveedores/', views.proveedores, name='proveedores'),
     path('agregar_proveedor/', views.agregar_proveedor, name='agregar_proveedor'),
     path('proveedor/<int:proveedor_id>/modificar', views.modificar_proveedor, name='modificar_proveedor'),
     path('proveedor/<int:proveedor_id>/eliminar', views.eliminar_proveedor, name='eliminar_proveedor'),
+    
+    path('invetario/', views.invetario, name='inventario'),  # Listado de INVENTARIO
+    path('generar_reporte_inventario/', views.generar_reporte_inventario, name='generar_reporte_inventario'),
+
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
