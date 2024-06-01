@@ -15,33 +15,33 @@
         {% csrf_token %}
         <div class="form-group">
             <label for="id_nombre">Nombre:</label>
-            <input type="text" class="form-control" id="id_nombre" name="nombre" value="{{ form.nombre.value }}">
+            <input type="text" class="form-control" id="id_nombre" name="nombre" value="{{ form.instance.nombre }}">
         </div>
         <div class="form-group">
             <label for="id_descripcion">Descripción:</label>
-            <textarea class="form-control" id="id_descripcion" name="descripcion" rows="3">{{ form.descripcion.value }}</textarea>
+            <textarea class="form-control" id="id_descripcion" name="descripcion" rows="3">{{ form.instance.descripcion }}</textarea>
         </div>
         <div class="form-group">
             <label for="id_precio">Precio:</label>
-            <input type="number" class="form-control" id="id_precio" name="precio" value="{{ form.precio.value }}">
+            <input type="number" class="form-control" id="id_precio" name="precio" value="{{ form.instance.precio }}">
         </div>
         <div class="form-group">
             <label for="id_stock">Stock:</label>
-            <input type="number" class="form-control" id="id_stock" name="stock" value="{{ form.stock.value }}">
+            <input type="number" class="form-control" id="id_stock" name="stock" value="{{ form.instance.stock }}">
         </div>
         <div class="form-group">
             <label for="id_proveedor">Proveedor:</label>
             <select class="form-control" id="id_proveedor" name="proveedor">
-                {% for proveedor in form.proveedor.choices %}
-                <option value="{{ proveedor.0 }}" {% if proveedor.0 == form.proveedor.value %} selected {% endif %}>{{ proveedor.1 }}</option>
+                {% for proveedor_id, proveedor_nombre in form.fields.proveedor.choices %}
+                <option value="{{ proveedor_id }}" {% if proveedor_id == form.instance.proveedor %} selected {% endif %}>{{ proveedor_nombre }}</option>
                 {% endfor %}
             </select>
         </div>
         <div class="form-group">
             <label for="id_categorias">Categorías:</label>
             <select class="form-control" id="id_categorias" name="categorias" multiple>
-                {% for categoria in form.categorias.choices %}
-                <option value="{{ categoria.0 }}" {% if categoria.0 in form.categorias.value %} selected {% endif %}>{{ categoria.1 }}</option>
+                {% for categoria_id, categoria_nombre in form.fields.categorias.choices %}
+                <option value="{{ categoria_id }}" {% if categoria_id in form.instance.categorias.all %} selected {% endif %}>{{ categoria_nombre }}</option>
                 {% endfor %}
             </select>
         </div>

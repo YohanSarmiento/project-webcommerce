@@ -1,0 +1,38 @@
+{% extends "master.html" %}
+
+{% block head %}
+    <title>Historial de Cambios</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+{% endblock head %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="mb-4">Historial de Cambios</h1>
+    <div class="mb-4">
+        <form method="post" action="{% url 'eliminar_historial' %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Eliminar Historial</button>
+        </form>
+    </div>
+    {% for cambios_grupo in cambios_agrupados %}
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="card-title">{{ cambios_grupo.0.producto.nombre }}</h5>
+        </div>
+        <div class="card-body">
+            {% for cambio in cambios_grupo %}
+            <p class="card-text">Usuario: {{ cambio.usuario.username }}</p>
+            <p class="card-text">Fecha de Cambio: {{ cambio.fecha_cambio }}</p>
+            <p class="card-text">Campo Modificado: {{ cambio.campo_modificado }}</p>
+            <p class="card-text">Valor Anterior: {{ cambio.valor_anterior }}</p>
+            <p class="card-text">Valor Nuevo: {{ cambio.valor_nuevo }}</p>
+            <hr>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+{% endblock %}

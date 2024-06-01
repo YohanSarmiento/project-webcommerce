@@ -22,6 +22,10 @@ urlpatterns = [
     
     path('invetario/', views.invetario, name='inventario'),  # Listado de INVENTARIO
     path('generar_reporte_inventario/', views.generar_reporte_inventario, name='generar_reporte_inventario'),
+    path('historial-cambios/', views.historial_cambios, name='historial_cambios'),
+    path('eliminar-historial/', eliminar_historial, name='eliminar_historial'),
+
+
 
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

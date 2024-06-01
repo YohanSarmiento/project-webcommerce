@@ -9,6 +9,7 @@ from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
 from io import BytesIO
 import csv
+from itertools import groupby
 
 def home(request):
     return render(request, 'home.html')
@@ -67,8 +68,18 @@ def modificar_producto(request, producto_id):
     if request.method == 'POST':
         form = ModificarProductoForm(request.POST, instance=producto)
         if form.is_valid():
-            form.save()
-            # Puedes agregar un mensaje de éxito aquí si lo deseas
+            # Guardar el producto modificado
+            producto_modificado = form.save()
+            
+            # Crear un registro en el historial de cambios
+            HistorialCambioProducto.objects.create(
+                producto=producto_modificado,
+                usuario=request.user,  # El usuario que realiza la modificación
+                campo_modificado='Modificación de Producto',
+                valor_anterior='Detalles del producto antes de la modificación',
+                valor_nuevo='Detalles del producto después de la modificación'
+            )
+            # Redireccionar a la página de detalles del producto modificado
             return redirect('detalle_producto', producto_id=producto_id)
     else:
         form = ModificarProductoForm(instance=producto)
@@ -265,4 +276,24 @@ def generar_reporte_inventario(request):
     else:
         # Manejar un formato no válido
         return HttpResponse("Formato de reporte no válido.")
+    
+def historial_cambios(request):
+    historial = HistorialCambioProducto.objects.all().order_by('-fecha_cambio')
+    cambios_agrupados = []
+    
+    # Agrupar los cambios por producto
+    for key, group in groupby(historial, lambda x: x.producto):
+        cambios_agrupados.append(list(group))
+
+    return render(request, 'historial_cambios.html', {'cambios_agrupados': cambios_agrupados})
+
+def eliminar_historial(request):
+    if request.method == 'POST':
+        # Eliminar todos los registros del historial de cambios
+        HistorialCambioProducto.objects.all().delete()
+        # Redireccionar a la página de inicio o a otra página de confirmación
+        return redirect('historial_cambios')  # Cambia 'inicio' por la URL a la que deseas redirigir
+    
+    # Si no es una solicitud POST, simplemente redirecciona a alguna página, como la de inicio
+    return redirect('historial_cambios')  # Cambia 'inicio' por la URL a la que deseas redirigir
 
