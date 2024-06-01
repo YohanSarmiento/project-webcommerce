@@ -15,12 +15,12 @@ class AgregarProductoForm(forms.ModelForm):
 class ProductoForm(forms.ModelForm):
     class Meta:
         model = Producto
-        fields = ['nombre', 'descripcion', 'precio', 'stock', 'proveedor', 'categorias']
+        fields = ['nombre', 'descripcion', 'precio', 'stock', 'proveedor', 'categorias', 'imagen']
         
 class ModificarProductoForm(forms.ModelForm):
     class Meta:
         model = Producto
-        fields = ['nombre', 'descripcion', 'precio', 'stock', 'proveedor', 'categorias']
+        fields = ['nombre', 'descripcion', 'precio', 'stock', 'proveedor', 'categorias', 'imagen']
         
 class ClienteForm(forms.ModelForm):
     class Meta:

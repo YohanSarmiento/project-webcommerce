@@ -10,6 +10,7 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
 from io import BytesIO
 import csv
 from itertools import groupby
+from django.forms.models import model_to_dict
 
 def home(request):
     return render(request, 'home.html')
@@ -37,7 +38,6 @@ def productos(request):
         return render(request, 'productos.html', {'productos': productos, 'categorias': categorias})
 #    else:
 #        return HttpResponse("No tienes permiso para ver esta página.")
-
 #def add_producto(request):
 #    # Lógica para obtener y mostrar todos los productos disponibles
 #    return render(request, 'add_producto.html')
@@ -48,16 +48,14 @@ def detalle_producto(request, producto_id):
 
 def add_producto(request):
     if request.method == 'POST':
-        form = AgregarProductoForm(request.POST)
+        form = ProductoForm(request.POST, request.FILES)  # Agrega request.FILES para manejar imágenes
         if form.is_valid():
             form.save()
             messages.success(request, '¡Producto agregado con éxito!')
-            # Redireccionar a la misma página después de guardar el producto
-            return redirect('add_producto')
+            return redirect('productos')
     else:
-        form = AgregarProductoForm()
+        form = ProductoForm()
     
-    # Obtener todos los proveedores y categorías
     proveedores = Proveedor.objects.all()
     categorias = Categoria.objects.all()
 
@@ -65,26 +63,37 @@ def add_producto(request):
 
 def modificar_producto(request, producto_id):
     producto = get_object_or_404(Producto, pk=producto_id)
+    proveedores = Proveedor.objects.all()
+    categorias = Categoria.objects.all()
     if request.method == 'POST':
-        form = ModificarProductoForm(request.POST, instance=producto)
+        form = ModificarProductoForm(request.POST, request.FILES, instance=producto)
         if form.is_valid():
-            # Guardar el producto modificado
-            producto_modificado = form.save()
-            
-            # Crear un registro en el historial de cambios
+            producto_modificado = form.save(commit=False)
+            # Crear una copia del producto antes de guardar los cambios
+            producto_anterior = model_to_dict(producto)
+            # Verificar si se ha subido una nueva imagen
+            if 'imagen' in request.FILES:
+                producto_modificado.imagen = request.FILES['imagen']
+            producto_modificado.save()
+            # Comparar los valores anteriores con los nuevos valores
+            cambios = []
+            for campo, valor_anterior in producto_anterior.items():
+                valor_nuevo = getattr(producto_modificado, campo)
+                if valor_anterior != valor_nuevo:
+                    cambios.append(f"{campo}: {valor_anterior} -> {valor_nuevo}")
+            # Guardar el historial de cambios
             HistorialCambioProducto.objects.create(
                 producto=producto_modificado,
-                usuario=request.user,  # El usuario que realiza la modificación
+                usuario=request.user,
                 campo_modificado='Modificación de Producto',
-                valor_anterior='Detalles del producto antes de la modificación',
+                valor_anterior='\n'.join(cambios) if cambios else 'Sin cambios',
                 valor_nuevo='Detalles del producto después de la modificación'
             )
-            # Redireccionar a la página de detalles del producto modificado
             return redirect('detalle_producto', producto_id=producto_id)
     else:
         form = ModificarProductoForm(instance=producto)
-    
-    return render(request, 'modificar_producto.html', {'form': form})
+
+    return render(request, 'modificar_producto.html', {'form': form, 'producto': producto, 'proveedores': proveedores, 'categorias': categorias})
 
 def eliminar_producto(request, producto_id):
     producto = get_object_or_404(Producto, pk=producto_id)
@@ -296,4 +305,35 @@ def eliminar_historial(request):
     
     # Si no es una solicitud POST, simplemente redirecciona a alguna página, como la de inicio
     return redirect('historial_cambios')  # Cambia 'inicio' por la URL a la que deseas redirigir
+
+def lista_reabastecimientos(request):
+    reabastecimientos = Reabastecimiento.objects.all().order_by('-fecha')
+    return render(request, 'lista_reabastecimientos.html', {'reabastecimientos': reabastecimientos})
+
+def reabastecer_productos(request):
+    if request.method == 'POST':
+        productos_bajo_stock = Producto.objects.filter(stock__lt=10)
+        for producto in productos_bajo_stock:
+            cantidad_reabastecida = 10  # Ajusta el valor según tus necesidades
+
+            # Registrar el pedido de reabastecimiento sin modificar el stock
+            Reabastecimiento.objects.create(
+                producto=producto,
+                cantidad=cantidad_reabastecida,
+                usuario=request.user
+            )
+
+        #messages.success(request, 'Pedidos de reabastecimiento registrados. Confirme los pedidos para actualizar el stock.')
+        return redirect('inventario')  # Cambia 'tu_vista_de_inventario' por el nombre de tu vista de inventario
+
+def confirmar_reabastecimiento(request, reabastecimiento_id):
+    reabastecimiento = get_object_or_404(Reabastecimiento, pk=reabastecimiento_id)
+    if reabastecimiento.estado == 'pendiente':
+        producto = reabastecimiento.producto
+        producto.stock += reabastecimiento.cantidad
+        producto.save()
+        reabastecimiento.estado = 'confirmado'
+        reabastecimiento.save()
+        messages.success(request, 'Reabastecimiento confirmado y stock actualizado.')
+    return redirect('lista_reabastecimientos')
 

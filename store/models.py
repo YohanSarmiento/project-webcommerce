@@ -28,6 +28,7 @@ class Producto(models.Model):
     stock = models.IntegerField()
     proveedor = models.ForeignKey(Proveedor, on_delete=models.CASCADE)
     categorias = models.ManyToManyField(Categoria, through='ProductoCategoria')
+    imagen = models.ImageField(upload_to='productos/', null=True, blank=True)  # Nuevo campo de imagen
 
     def __str__(self):
         return self.nombre
@@ -70,13 +71,13 @@ class DetallePedido(models.Model):
 class HistorialCambioProducto(models.Model):
     producto = models.ForeignKey('Producto', on_delete=models.CASCADE)
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
-    fecha_cambio = models.DateTimeField(default=datetime.now)
+    fecha_cambio = models.DateTimeField(auto_now_add=True)
     campo_modificado = models.CharField(max_length=100)
-    valor_anterior = models.CharField(max_length=255)
-    valor_nuevo = models.CharField(max_length=255)
+    valor_anterior = models.TextField()  # Cambiar a TextField para valores largos
+    valor_nuevo = models.TextField()     # Cambiar a TextField para valores largos
 
     def __str__(self):
-        return f"{self.producto.nombre} - {self.campo_modificado} - {self.fecha_cambio}"
+        return f"{self.fecha_cambio.strftime('%Y-%m-%d %H:%M:%S')} - {self.usuario.username} - {self.campo_modificado}"
     
 @receiver(pre_save, sender=Producto)
 def registrar_cambio_producto(sender, instance, **kwargs):
@@ -95,4 +96,41 @@ def registrar_cambio_producto(sender, instance, **kwargs):
                     valor_anterior=str(old_value),
                     valor_nuevo=str(new_value)
                 )
+                
+class ProductoCambio(models.Model):
+    producto = models.ForeignKey('Producto', on_delete=models.CASCADE)
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    fecha_cambio = models.DateTimeField(default=datetime.now)
+    nombre_anterior = models.CharField(max_length=255, blank=True, null=True)
+    nombre_nuevo = models.CharField(max_length=255, blank=True, null=True)
+    descripcion_anterior = models.TextField(blank=True, null=True)
+    descripcion_nueva = models.TextField(blank=True, null=True)
+    precio_anterior = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    precio_nuevo = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    stock_anterior = models.IntegerField(blank=True, null=True)
+    stock_nuevo = models.IntegerField(blank=True, null=True)
+    proveedor_anterior = models.ForeignKey('Proveedor', on_delete=models.SET_NULL, blank=True, null=True, related_name='proveedor_anterior')
+    proveedor_nuevo = models.ForeignKey('Proveedor', on_delete=models.SET_NULL, blank=True, null=True, related_name='proveedor_nuevo')
+    categorias_anterior = models.ManyToManyField('Categoria', blank=True, related_name='categorias_anterior')
+    categorias_nuevo = models.ManyToManyField('Categoria', blank=True, related_name='categorias_nuevo')
+    imagen_anterior = models.ImageField(upload_to='productos/', blank=True, null=True)
+    imagen_nueva = models.ImageField(upload_to='productos/', blank=True, null=True)
+    
+    def __str__(self):
+        return f"{self.producto.nombre} - {self.fecha_cambio}"
+
+                
+class Reabastecimiento(models.Model):
+    ESTADO_CHOICES = [
+        ('pendiente', 'Pendiente'),
+        ('confirmado', 'Confirmado'),
+    ]
+    producto = models.ForeignKey('Producto', on_delete=models.CASCADE)
+    cantidad = models.IntegerField()
+    fecha = models.DateTimeField(auto_now_add=True)
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    estado = models.CharField(max_length=10, choices=ESTADO_CHOICES, default='pendiente')
+
+    def __str__(self):
+        return f"{self.producto.nombre} - {self.cantidad} unidades - {self.estado}"
 

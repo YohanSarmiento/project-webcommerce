@@ -24,8 +24,12 @@ urlpatterns = [
     path('generar_reporte_inventario/', views.generar_reporte_inventario, name='generar_reporte_inventario'),
     path('historial-cambios/', views.historial_cambios, name='historial_cambios'),
     path('eliminar-historial/', eliminar_historial, name='eliminar_historial'),
-
-
+    
+    path('reabastecer-productos/', views.reabastecer_productos, name='reabastecer_productos'),
+    path('lista-reabastecimientos/', views.lista_reabastecimientos, name='lista_reabastecimientos'),
+    path('confirmar-reabastecimiento/<int:reabastecimiento_id>/', views.confirmar_reabastecimiento, name='confirmar_reabastecimiento'),
+    
+    
 
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

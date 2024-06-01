@@ -6,45 +6,84 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Home</title>
-<!-- Agrega tus estilos CSS aquí si los tienes -->
-
 <link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">
-<!-- <script type="text/javascript" src="{% static 'js/index.js' %}"></script> -->
-
+<style>
+    .card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+    .card-body {
+        padding: 2rem;
+    }
+    .btn-lg {
+        padding: 1rem 2rem;
+        font-size: 1.2rem;
+        border-radius: 10px;
+        background-color: #007bff;
+        border: none;
+    }
+    .btn-lg:hover {
+        background-color: #0056b3;
+        color: #fff;
+    }
+    .container-lg {
+        max-width: 900px;
+    }
+    .row {
+        margin-top: 50px;
+    }
+    .col-md-6 {
+        margin-bottom: 30px;
+    }
+</style>
 {% endblock head %}
 
 {% block body %}
-<!-- Aquí agregamos las pestañas -->
-<body>
-    <div class="container-lg my-5">
-        <div class="row">
-            <!-- Opción 1: Productos -->
-            <div class="col-md-6">
-                <div class="card text-center">
-                    <div class="card-body">
-                        <a href="{% url 'productos' %}" class="btn btn-primary btn-lg">PRODUCTOS</a>
-                    </div>
+<div class="container-lg my-5">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card text-center">
+                <div class="card-body">
+                    <a href="{% url 'productos' %}" class="btn btn-primary btn-lg">PRODUCTOS</a>
                 </div>
             </div>
-            <!-- Opción 2: Proveedores -->
-            <div class="col-md-6">
-                <div class="card text-center">
-                    <div class="card-body">
-                        <a href="{% url 'proveedores' %}" class="btn btn-primary btn-lg">PROVEEDORES</a>
-                    </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card text-center">
+                <div class="card-body">
+                    <a href="{% url 'proveedores' %}" class="btn btn-primary btn-lg">PROVEEDORES</a>
                 </div>
             </div>
-            <!-- Opción 3: Inventario -->
-            <div class="col-md-6 mt-3">
-                <div class="card text-center">
-                    <div class="card-body">
-                        <a href="{% url 'inventario' %}" class="btn btn-primary btn-lg">INVENTARIO</a>
-                    </div>
+        </div>
+        <div class="col-md-6 mt-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <a href="{% url 'inventario' %}" class="btn btn-primary btn-lg">INVENTARIO</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mt-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <a class="btn btn-primary btn-lg" href="{% url 'historial_cambios' %}">HISTORIAL INVENTARIO</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mt-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <a class="btn btn-primary btn-lg" href="{% url 'lista_reabastecimientos' %}">HISTORIAL PEDIDOS</a>
                 </div>
             </div>
         </div>
     </div>
-</body>
+</div>
 {% endblock %}
 
 <!--

@@ -3,174 +3,12 @@
 {% load static %}
 
 {% block head %}
-<title>Prodcutos</title>
-<!-- <script type="text/javascript" src="{% static 'js/index.js' %}"></script> -->
+<title>Productos</title>
 <link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">
-
-{% endblock head %}
-
-{% block body %}
-
-<body>
-    <div class="container-lg my-5">
-        <div class="header-container">
-            <!-- Título de la página -->
-            <h1>Pagina Productos</h1>
-            <!-- Botón para agregar producto -->
-            <a class="agregar-producto" href="{% url 'add_producto' %}">Agregar Producto</a>
-        </div>
-        <!-- Formulario de búsqueda por nombre -->
-        <form method="GET" class="mb-4">
-            <div class="input-group">
-                <input type="text" class="form-control" id="search_nombre" name="search_nombre" placeholder="Buscar por Nombre">
-                <div class="input-group-append">
-                    <button type="submit" class="btn btn-primary">Buscar</button>
-                </div>
-            </div>
-        </form>
-
-        <!-- Formulario de búsqueda por categoría -->
-        <form method="GET" class="mb-4">
-            <div class="input-group">
-                <select class="custom-select" id="search_categoria" name="search_categoria">
-                    <option value="" selected>Selecciona una categoría</option>
-                    {% for categoria in categorias %}
-                    <option value="{{ categoria.id }}">{{ categoria.nombre }}</option>
-                    {% endfor %}
-                </select>
-                <div class="input-group-append">
-                    <button type="submit" class="btn btn-primary">Buscar</button>
-                </div>
-            </div>
-            <!-- Separación entre los botones de búsqueda y el de resetear -->
-            <div class="mt-2">
-                <button type="submit" class="btn btn-secondary">Mostrar Todos</button>
-            </div>
-        </form>
-        <!-- Lista de productos -->
-        <h2>Productos</h2>
-        <div class="row gy-3">
-            {% for producto in productos %}
-            <div class="col-12 col-md-6 col-lg-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <!-- Agrega un enlace para abrir el modal -->
-                            <a href="#" class="ver-detalle" data-toggle="modal" data-target="#detalleProducto{{ producto.id }}">
-                                {{ producto.nombre }}
-                            </a>
-                        </h5>
-                        <p class="card-text"><strong>Precio:</strong> {{ producto.precio }}</p>
-                        <p class="card-text"><strong>Categoría:</strong>
-                            {% for categoria in producto.categorias.all %}
-                                {{ categoria.nombre }}{% if not forloop.last %}, {% endif %}
-                            {% endfor %}
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <!-- Modal para los detalles del producto -->
-            <div class="modal fade" id="detalleProducto{{ producto.id }}" tabindex="-1" role="dialog" aria-labelledby="detalleProducto{{ producto.id }}Label" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="detalleProducto{{ producto.id }}Label">{{ producto.nombre }}</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <p><strong>Descripción:</strong> {{ producto.descripcion }}</p>
-                            <p><strong>Precio:</strong> {{ producto.precio }}</p>
-                            <p><strong>Stock:</strong> {{ producto.stock }}</p>
-                            <p><strong>Proveedor:</strong> {{ producto.proveedor }}</p>
-                            <p><strong>Categorías:</strong>
-                                {% for categoria in producto.categorias.all %}
-                                    {{ categoria.nombre }}{% if not forloop.last %}, {% endif %}
-                                {% endfor %}
-                            </p>
-                        </div>
-                        <div class="modal-footer">
-                            <!-- Botón para cerrar el modal -->
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                            <!-- Botón para modificar el producto 
-                            <a href="{% url 'modificar_producto' producto.id %}" class="btn btn-primary">Modificar</a>
-                            -->
-                            <!-- Botón "Más detalles" -->
-                            <a href="{% url 'detalle_producto' producto.id %}" class="btn btn-primary">Más detalles</a>
-                            <!-- Botón "Eliminar" 
-                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmarEliminar{{ producto.id }}">
-                                Eliminar
-                            </button>
-                            -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Modal de confirmación para eliminar -->
-            <div class="modal fade" id="confirmarEliminar{{ producto.id }}" tabindex="-1" role="dialog" aria-labelledby="confirmarEliminar{{ producto.id }}Label" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="confirmarEliminar{{ producto.id }}Label">Confirmar Eliminación</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <p>¿Estás seguro de que deseas eliminar el producto "{{ producto.nombre }}"?</p>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                            <a href="{% url 'eliminar_producto' producto.id %}" class="btn btn-danger">Eliminar</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-
-    <script>
-        (function($) {
-            $(document).ready(function() {
-                $('.ver-detalle').click(function(e) {
-                    e.preventDefault();
-                    var targetModal = $(this).attr('data-target');
-                    $(targetModal).modal('show');
-                });
-            });
-        })(jQuery);
-    </script>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
-
 <style>
-    .modal {
-        z-index: 1050;
+    .container-lg {
+        max-width: 900px;
     }
-    /* Estilos básicos para el botón */
-    .agregar-producto {
-        display: inline-block;
-        padding: 10px 20px;
-        background-color: #007bff;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 16px;
-        text-align: center;
-        text-decoration: none;
-    }
-    /* Estilo cuando el cursor está sobre el botón */
-    .agregar-producto:hover {
-        background-color: #00afff;
-        color: white;
-    }
-    /* Contenedor para alinear el botón */
     .header-container {
         display: flex;
         justify-content: space-between;
@@ -180,9 +18,183 @@
         border-bottom: 1px solid #ccc;
         margin-bottom: 20px;
     }
-    /* Estilos para el título de la página */
     h1 {
         margin: 0;
+        font-family: 'Arial', sans-serif;
+        font-weight: bold;
+        font-size: 2rem;
+    }
+    .agregar-producto {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 16px;
+        text-align: center;
+        text-decoration: none;
+        transition: background-color 0.2s, transform 0.2s;
+    }
+    .agregar-producto:hover {
+        background-color: #0056b3;
+        color: white;
+        transform: scale(1.05);
+    }
+    .input-group .form-control, .input-group .btn {
+        border-radius: 10px;
+    }
+    .input-group .btn-primary {
+        background-color: #007bff;
+        border: none;
+    }
+    .input-group .btn-primary:hover {
+        background-color: #0056b3;
+    }
+    .card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+    .card-body {
+        padding: 2rem;
+    }
+    .card-title a {
+        text-decoration: none;
+        color: #000;
+        transition: color 0.2s;
+    }
+    .card-title a:hover {
+        color: #007bff;
+    }
+    .modal-content {
+        border-radius: 15px;
+    }
+    .modal-header, .modal-footer {
+        border: none;
+    }
+    .modal-header .close {
+        font-size: 1.5rem;
+    }
+    .btn-secondary {
+        background-color: #6c757d;
+        border: none;
+    }
+    .btn-secondary:hover {
+        background-color: #5a6268;
     }
 </style>
+{% endblock head %}
+
+{% block body %}
+<div class="container-lg my-5">
+    <div class="header-container">
+        <h1>Productos</h1>
+        <a class="agregar-producto" href="{% url 'add_producto' %}">Agregar Producto</a>
+    </div>
+    <form method="GET" class="mb-4">
+        <div class="input-group">
+            <input type="text" class="form-control" id="search_nombre" name="search_nombre" placeholder="Buscar por Nombre">
+            <div class="input-group-append">
+                <button type="submit" class="btn btn-primary">Buscar</button>
+            </div>
+        </div>
+    </form>
+    <form method="GET" class="mb-4">
+        <div class="input-group">
+            <select class="custom-select" id="search_categoria" name="search_categoria">
+                <option value="" selected>Selecciona una categoría</option>
+                {% for categoria in categorias %}
+                <option value="{{ categoria.id }}">{{ categoria.nombre }}</option>
+                {% endfor %}
+            </select>
+            <div class="input-group-append">
+                <button type="submit" class="btn btn-primary">Buscar</button>
+            </div>
+        </div>
+        <div class="mt-2">
+            <button type="submit" class="btn btn-secondary">Mostrar Todos</button>
+        </div>
+    </form>
+    <h2>Productos</h2>
+    <div class="row gy-3">
+        {% for producto in productos %}
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <a href="#" class="ver-detalle" data-toggle="modal" data-target="#detalleProducto{{ producto.id }}">
+                            {{ producto.nombre }}
+                        </a>
+                    </h5>
+                    <p class="card-text"><strong>Precio:</strong> {{ producto.precio }}</p>
+                    <p class="card-text"><strong>Categoría:</strong>
+                        {% for categoria in producto.categorias.all %}
+                            {{ categoria.nombre }}{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    </p>
+                    {% if producto.imagen %}
+                        <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" class="img-fluid">
+                    {% else %}
+                        <p>No hay imagen disponible para este producto.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="detalleProducto{{ producto.id }}" tabindex="-1" role="dialog" aria-labelledby="detalleProducto{{ producto.id }}Label" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="detalleProducto{{ producto.id }}Label">{{ producto.nombre }}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        {% if producto.imagen %}
+                            <img src="{{ producto.imagen.url }}" class="img-fluid" alt="Imagen del producto">
+                        {% else %}
+                            <p>No hay imagen disponible para este producto.</p>
+                        {% endif %}
+                        <p><strong>Descripción:</strong> {{ producto.descripcion }}</p>
+                        <p><strong>Precio:</strong> {{ producto.precio }}</p>
+                        <p><strong>Stock:</strong> {{ producto.stock }}</p>
+                        <p><strong>Proveedor:</strong> {{ producto.proveedor }}</p>
+                        <p><strong>Categorías:</strong>
+                            {% for categoria in producto.categorias.all %}
+                                {{ categoria.nombre }}{% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        <a href="{% url 'detalle_producto' producto.id %}" class="btn btn-primary">Más detalles</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    (function($) {
+        $(document).ready(function() {
+            $('.ver-detalle').click(function(e) {
+                e.preventDefault();
+                var targetModal = $(this).attr('data-target');
+                $(targetModal).modal('show');
+            });
+        });
+    })(jQuery);
+</script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 {% endblock %}
