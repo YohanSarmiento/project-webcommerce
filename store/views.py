@@ -336,4 +336,3 @@ def confirmar_reabastecimiento(request, reabastecimiento_id):
         reabastecimiento.save()
         messages.success(request, 'Reabastecimiento confirmado y stock actualizado.')
     return redirect('lista_reabastecimientos')
-
