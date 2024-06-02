@@ -26,10 +26,25 @@ urlpatterns = [
     path('eliminar-historial/', eliminar_historial, name='eliminar_historial'),
     
     path('reabastecer-productos/', views.reabastecer_productos, name='reabastecer_productos'),
+    path('reabastecer-producto/<int:producto_id>/', views.reabastecer_producto, name='reabastecer_producto'),
     path('lista-reabastecimientos/', views.lista_reabastecimientos, name='lista_reabastecimientos'),
+    path('cancelar-reabastecimiento/<int:reabastecimiento_id>/', views.cancelar_reabastecimiento, name='cancelar_reabastecimiento'),
     path('confirmar-reabastecimiento/<int:reabastecimiento_id>/', views.confirmar_reabastecimiento, name='confirmar_reabastecimiento'),
     
+    path('home/', views.home_cliente, name='home_cliente'),
+    path('catalogo/', views.catalogo, name='catalogo'),
+    path('carrito/', views.compras_cliente, name='compras_cliente'),
     
+    path('realizar_venta/<int:producto_id>/', views.realizar_venta, name='realizar_venta'),
+    path('ventas/', views.lista_ventas, name='lista_ventas'),
+    
+    path('generar_reporte_ventas/csv/', views.generar_reporte_ventas_csv, name='generar_reporte_ventas_csv'),
+    path('generar_reporte_ventas/pdf/', views.generar_reporte_ventas_pdf, name='generar_reporte_ventas_pdf'),
+    
+    path('eliminar_ventas/', views.eliminar_ventas, name='eliminar_ventas'),
+    path('eliminar_reabastecimiento/', views.eliminar_reabastecimiento, name='eliminar_reabastecimiento'),
+
+  
 
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

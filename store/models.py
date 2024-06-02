@@ -133,4 +133,17 @@ class Reabastecimiento(models.Model):
 
     def __str__(self):
         return f"{self.producto.nombre} - {self.cantidad} unidades - {self.estado}"
+    
+class Venta(models.Model):
+    producto = models.ForeignKey('Producto', on_delete=models.CASCADE)
+    precio_unitario = models.DecimalField(max_digits=10, decimal_places=2)
+    cantidad = models.IntegerField()
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)  # Relación con el modelo User de Django
+    fecha_venta = models.DateTimeField(auto_now_add=True)
+
+    def calcular_total(self):
+        return self.precio_unitario * self.cantidad
+
+    def __str__(self):
+        return f"Venta de {self.cantidad} unidades de {self.producto.nombre} por {self.usuario.username}"
 

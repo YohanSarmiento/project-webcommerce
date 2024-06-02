@@ -11,6 +11,9 @@ from io import BytesIO
 import csv
 from itertools import groupby
 from django.forms.models import model_to_dict
+from django.core.paginator import Paginator
+from reportlab.pdfgen import canvas
+
 
 def home(request):
     return render(request, 'home.html')
@@ -141,12 +144,9 @@ def eliminar_cliente(request, cliente_id):
 
 #======================================== Vistas Cliente ============================================
 def productos_cliente(request):
-    if es_cliente(request.user):
-        # Lógica para obtener productos para clientes
-        productos = Producto.objects.all()
-        return render(request, 'productos_cliente.html', {'productos': productos})
-    else:
-        return HttpResponse("No tienes permiso para ver esta página.")
+    # Lógica para obtener productos para clientes
+    productos = Producto.objects.all()
+    return render(request, 'productos_cliente.html', {'productos': productos})
 
 def login(request):
     if request.method == 'POST':
@@ -190,10 +190,11 @@ def agregar_proveedor(request):
     if request.method == 'POST':
         form = ProveedorForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('proveedores')
+            form.save()  # Guardar el formulario creará y guardará un nuevo Proveedor en la base de datos
+            return redirect('proveedores')  # Redirigir a la página de proveedores después de guardar el proveedor
     else:
-        form = ProveedorForm()
+        form = ProveedorForm()  # Si no es una solicitud POST, crea un formulario vacío
+
     return render(request, 'agregar_proveedor.html', {'form': form})
 
 def modificar_proveedor(request, proveedor_id):
@@ -315,16 +316,29 @@ def reabastecer_productos(request):
         productos_bajo_stock = Producto.objects.filter(stock__lt=10)
         for producto in productos_bajo_stock:
             cantidad_reabastecida = 10  # Ajusta el valor según tus necesidades
-
             # Registrar el pedido de reabastecimiento sin modificar el stock
             Reabastecimiento.objects.create(
                 producto=producto,
                 cantidad=cantidad_reabastecida,
                 usuario=request.user
             )
-
         #messages.success(request, 'Pedidos de reabastecimiento registrados. Confirme los pedidos para actualizar el stock.')
         return redirect('inventario')  # Cambia 'tu_vista_de_inventario' por el nombre de tu vista de inventario
+    
+def reabastecer_producto(request, producto_id):
+    # Obtener el producto específico por su ID
+    producto = get_object_or_404(Producto, pk=producto_id)
+    if request.method == 'POST':
+        cantidad_reabastecida = 10
+        Reabastecimiento.objects.create(
+                producto=producto,
+                cantidad=cantidad_reabastecida,
+                usuario=request.user
+            ) 
+        return redirect('inventario')
+
+    # Si la solicitud no es POST, simplemente renderizamos la página nuevamente
+    return render(request, 'tu_template.html', {'producto': producto})
 
 def confirmar_reabastecimiento(request, reabastecimiento_id):
     reabastecimiento = get_object_or_404(Reabastecimiento, pk=reabastecimiento_id)
@@ -336,3 +350,118 @@ def confirmar_reabastecimiento(request, reabastecimiento_id):
         reabastecimiento.save()
         messages.success(request, 'Reabastecimiento confirmado y stock actualizado.')
     return redirect('lista_reabastecimientos')
+
+def cancelar_reabastecimiento(request, reabastecimiento_id):
+    reabastecimiento = get_object_or_404(Reabastecimiento, pk=reabastecimiento_id)
+    if reabastecimiento.estado == 'pendiente':
+        reabastecimiento.delete()
+        messages.success(request, 'Reabastecimiento cancelado correctamente.')
+    else:
+        messages.error(request, 'No se puede cancelar un reabastecimiento confirmado.')
+    return redirect('lista_reabastecimientos')
+
+def realizar_venta(request, producto_id):
+    if request.method == 'POST':
+        producto = Producto.objects.get(pk=producto_id)
+        cantidad_vendida = int(request.POST['cantidad'])
+        if cantidad_vendida <= 0:
+            messages.error(request, "La cantidad debe ser mayor que cero.")
+            return redirect('inventario')
+        if cantidad_vendida > producto.stock:
+            messages.error(request, "No se puede vender más de lo que hay en el inventario.")
+            return redirect('inventario')
+        
+        precio_unitario = producto.precio
+        total = precio_unitario * cantidad_vendida
+        
+        # Crear la instancia de Venta después de calcular el total
+        venta = Venta.objects.create(
+            producto=producto,
+            precio_unitario=precio_unitario,
+            cantidad=cantidad_vendida,
+            usuario=request.user
+        )
+        venta.total = total  # Asignar el total calculado a la instancia de venta
+        venta.save()
+        
+        # Actualizar el stock del producto
+        producto.stock -= cantidad_vendida
+        producto.save()
+        
+        messages.success(request, "Venta realizada con éxito.")
+        return redirect('inventario')
+
+def lista_ventas(request):
+    ventas_list = Venta.objects.all().order_by('-fecha_venta')
+    paginator = Paginator(ventas_list, 10)  # Muestra 10 ventas por página
+
+    page_number = request.GET.get('page')
+    ventas = paginator.get_page(page_number)
+    
+    # Calcular el total de todas las ventas
+    total_ventas = sum(venta.calcular_total() for venta in ventas_list)
+
+    context = {
+        'ventas': ventas,
+        'total_ventas': total_ventas
+    }
+    return render(request, 'lista_ventas.html', context)
+
+
+def generar_reporte_ventas_csv(request):
+    ventas = Venta.objects.all()  # Obtener todas las ventas
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="reporte_ventas.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['Producto', 'Precio Unitario', 'Cantidad', 'Total', 'Usuario', 'Fecha de Venta'])
+    
+    for venta in ventas:
+        writer.writerow([venta.producto.nombre, venta.precio_unitario, venta.cantidad, venta.calcular_total(), venta.usuario.username, venta.fecha_venta])
+
+    return response
+
+def generar_reporte_ventas_pdf(request):
+    ventas = Venta.objects.all()  # Obtener todas las ventas
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="reporte_ventas.pdf"'
+
+    p = canvas.Canvas(response, pagesize=letter)
+    p.drawString(100, 750, "Reporte de Ventas")
+
+    y = 730  # Posición inicial en y
+    for venta in ventas:
+        p.drawString(100, y, f"Producto: {venta.producto.nombre}")
+        p.drawString(100, y - 20, f"Precio Unitario: ${venta.precio_unitario}")
+        p.drawString(100, y - 40, f"Cantidad: {venta.cantidad}")
+        p.drawString(100, y - 60, f"Total: ${venta.calcular_total()}")
+        p.drawString(100, y - 80, f"Usuario: {venta.usuario.username}")
+        p.drawString(100, y - 100, f"Fecha de Venta: {venta.fecha_venta.strftime('%Y-%m-%d %H:%M:%S')}")
+        y -= 120  # Espacio entre cada venta
+
+    p.showPage()
+    p.save()
+
+    return response
+
+def eliminar_reabastecimiento(request):
+    # Eliminar todos los registros de ventas
+    Reabastecimiento.objects.all().delete()
+    # Redirigir a la página de la lista de ventas
+    return redirect('lista_reabastecimientos')
+
+def eliminar_ventas(request):
+    # Eliminar todos los registros de ventas
+    Venta.objects.all().delete()
+    # Redirigir a la página de la lista de ventas
+    return redirect('lista_ventas')
+
+
+def home_cliente(request):
+    return render(request, 'home_cliente.html')
+
+def catalogo(request):
+    return render(request, 'catalogo.html')
+
+def compras_cliente(request):
+    return render(request, 'compras_cliente.html')

@@ -134,6 +134,7 @@
                         </a>
                     </h5>
                     <p class="card-text"><strong>Precio:</strong> {{ producto.precio }}</p>
+                    <p class="card-text"><strong>Stock:</strong> {{ producto.stock }}</p>
                     <p class="card-text"><strong>Categoría:</strong>
                         {% for categoria in producto.categorias.all %}
                             {{ categoria.nombre }}{% if not forloop.last %}, {% endif %}

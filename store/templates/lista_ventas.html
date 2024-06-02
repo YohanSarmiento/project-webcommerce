@@ -1,0 +1,117 @@
+{% extends "master.html" %}
+
+{% load static %}
+
+{% block head %}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ventas</title>
+<link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">
+{% endblock head %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1>Lista de Ventas</h1>
+    <h2>Total Ventas: <span id="total-ventas" style="display:none;">{{ total_ventas }}</span></h2>
+    <!-- Botón para eliminar todos los registros de ventas -->
+    <form method="post" action="{% url 'eliminar_ventas' %}" style="display: inline;">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Eliminar todas las ventas</button>
+    </form>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Precio Unitario</th>
+                <th>Cantidad</th>
+                <th>Total</th>
+                <th>Usuario</th>
+                <th>Fecha de Venta</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for venta in ventas %}
+            <tr>
+                <td>{{ venta.producto.nombre }}</td>
+                <td><span class="precio-unitario">{{ venta.precio_unitario }}</span></td>
+                <td>{{ venta.cantidad }}</td>
+                <td><span class="total">{{ venta.calcular_total }}</span></td>
+                <td>{{ venta.usuario.username }}</td>
+                <td>{{ venta.fecha_venta }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Paginación -->
+    <nav>
+        <ul class="pagination">
+            {% if ventas.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1" aria-label="First">
+                    <span aria-hidden="true">&laquo;&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ ventas.previous_page_number }}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            {% endif %}
+            {% for num in ventas.paginator.page_range %}
+            <li class="page-item {% if ventas.number == num %}active{% endif %}">
+                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+            </li>
+            {% endfor %}
+            {% if ventas.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ ventas.next_page_number }}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ ventas.paginator.num_pages }}" aria-label="Last">
+                    <span aria-hidden="true">&raquo;&raquo;</span>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    <!-- Botones para generar reportes -->
+    <div class="mb-3">
+        <a href="{% url 'generar_reporte_ventas_csv' %}?formato=csv" class="btn btn-primary">Generar Reporte CSV</a>
+    <!--    <a href="{% url 'generar_reporte_ventas_pdf' %}?formato=pdf" class="btn btn-primary">Generar Reporte PDF</a>      -->  
+    </div>
+
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        function formatNumber(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+    
+        const totalVentasElement = document.getElementById('total-ventas');
+        const totalVentasValue = parseFloat(totalVentasElement.textContent).toFixed(2);
+        const formattedTotalVentas = `$${formatNumber(totalVentasValue)}`;
+        
+        totalVentasElement.style.display = 'inline';
+        totalVentasElement.textContent = formattedTotalVentas;
+    
+        // Formatear precios unitarios y totales en la tabla
+        const preciosUnitarios = document.querySelectorAll('.precio-unitario');
+        const totales = document.querySelectorAll('.total');
+    
+        preciosUnitarios.forEach(function(element) {
+            const value = parseFloat(element.textContent).toFixed(2);
+            element.textContent = `$${formatNumber(value)}`;
+        });
+    
+        totales.forEach(function(element) {
+            const value = parseFloat(element.textContent).toFixed(2);
+            element.textContent = `$${formatNumber(value)}`;
+        });
+    });
+</script>
+{% endblock %}

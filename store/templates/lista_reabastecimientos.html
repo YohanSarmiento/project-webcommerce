@@ -10,6 +10,11 @@
     <div class="header-container">
         <h1>Lista de Reabastecimientos</h1>
     </div>
+    <!-- Botón para eliminar todos los registros de reabastecimiento -->
+    <form method="post" action="{% url 'eliminar_reabastecimiento' %}" style="display: inline;">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Eliminar todas los registros</button>
+    </form>
     <table class="table table-striped">
         <thead>
             <tr>
@@ -34,6 +39,7 @@
                 <td>
                     {% if reabastecimiento.estado == 'pendiente' %}
                     <a href="{% url 'confirmar_reabastecimiento' reabastecimiento.id %}" class="btn btn-primary btn-sm">Confirmar</a>
+                    <a href="{% url 'cancelar_reabastecimiento' reabastecimiento.id %}" class="btn btn-danger btn-sm">Cancelar</a>
                     {% else %}
                     Confirmado
                     {% endif %}
