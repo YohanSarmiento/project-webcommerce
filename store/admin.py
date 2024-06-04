@@ -1,10 +1,9 @@
 from django.contrib import admin
 from .models import Proveedor, Categoria, Producto, Cliente, Pedido, DetallePedido
 from .forms import ProductoForm
+from .models import *
 
 # Register your models here.
-
-
 class ProveedorAdmin(admin.ModelAdmin):
     list_display = ('nombre', 'direccion', 'telefono', 'correo_electronico')
     search_fields = ('nombre', 'direccion', 'telefono', 'correo_electronico')
@@ -46,3 +45,18 @@ class DetallePedidoAdmin(admin.ModelAdmin):
     search_fields = ('pedido__cliente__nombre', 'pedido__cliente__apellido', 'producto__nombre')
 
 admin.site.register(DetallePedido, DetallePedidoAdmin)
+
+
+# Register your models here.
+
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ("id", "name")
+
+class ProductAdmin(admin.ModelAdmin):
+    list_display = ("id", "name", "price", "category", "description")
+
+admin.site.register(Customer)
+admin.site.register(Category, CategoryAdmin)
+admin.site.register(Product, ProductAdmin)
+admin.site.register(Order)
+admin.site.register(OrderItem)

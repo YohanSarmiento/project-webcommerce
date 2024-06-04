@@ -51,6 +51,26 @@
                 <div class="card-body">
                     <a href="{% url 'productos' %}" class="btn btn-primary btn-lg">PRODUCTOS</a>
                 </div>
+
+<body>
+    <div class="container-fluid my-0">
+        <div class="row main_storeImg main_page pe-0">
+            <div lass="col-lg-12 mx-0">
+                <!-- <img src="{% static 'images/main_store.jpg' %}" class="img-fluid imghome" alt=""> -->
+                
+                <!-- <button class="btn btn-primary add-btn btn_view_roducts" onclick="">Ver Productos</button> -->
+                <a href="{% url 'view_products' %}" class="btn btn-primary btn_view_roducts">Ver Productos</a>
+                <button type="button" class="btn btn-primary btn_contact">Contactenos</button>
+
+            </div>
+        </div>
+    </div>
+    <!-- <div class="container-lg my-5">
+        <h2>responsive column widths</h2>
+        <div class="row gy-3"> 
+            <div class="col-sm-4 col-lg-6">
+                <div class="p-5 bg-primary text-light">col 1</div>
+                <h3>Hello!</h3>
             </div>
         </div>
         <div class="col-md-6">
@@ -83,4 +103,10 @@
         </div>
     </div>
 </div>
+    </div> -->
+
+
+    <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- <script type="text/javascript" src="{% static 'js/home.js' %}"></script> -->
+</body>
 {% endblock %}
