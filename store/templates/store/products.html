@@ -1,4 +1,4 @@
-{% extends "master.html" %}
+{% extends "master_cliente.html" %}
 
 {% load static %}
 
@@ -23,7 +23,7 @@
                                 onclick="getProducts('{{ category.id }}')">
                                 <img class="bi pe-none me-2" src="{% static 'images/products.png' %}" alt="Bootstrap"
                                     width="16" height="16">
-                                {{ category.name }}</a>
+                                {{ category.nombre }}</a>
                         </li>
                         {% endfor %}
                     </ul>
@@ -36,11 +36,11 @@
                     <div class="card" style="width: 18rem;">
                         <img src="{{product.imageURL}}" class="card-img-top" alt="...">
                         <div class="card-body">
-                            <h5 class="card-title">{{product.name}}</h5>
+                            <h5 class="card-title">{{product.nombre}}</h5>
                             <p class="card-text">Some quick example text to build on the card title and make up the bulk
                                 of the card's content.</p>
                             <h4 style="display: inline-block; float: right">
-                                <strong>${{product.price|floatformat:2}}</strong>
+                                <strong>${{product.precio|floatformat:2}}</strong>
                             </h4>
                             <button class="btn btn-outline-primary add-btn" id="product-info" data-product-id="{{ product.id }}" onclick="addToCart('{{ product.id }}')">Comprar</button>
                         </div>

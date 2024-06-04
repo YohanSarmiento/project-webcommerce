@@ -476,14 +476,15 @@ def home_cliente(request):
 
 def view_products(request):
     categories = Categoria.objects.all()
-    print(categories)
-    print("hello i am in view products")
     products = Producto.objects.all()
+
     context = {
         'categories': categories,
-        'products': products
+        'products': products,
     }
+    print(context)
     return render(request, 'store/products.html', context)
+
 
 def get_products_by_category(request, category_id):
     print(category_id)

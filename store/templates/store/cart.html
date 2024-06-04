@@ -30,8 +30,8 @@
             {% for item in cart_items %}
             <tr>
                 <th scope="row">{{ forloop.counter }}</th>
-                <td>{{ item.product.name }}</td>
-                <td>${{ item.product.price }}</td>
+                <td>{{ item.product.nombre }}</td>
+                <td>${{ item.product.precio }}</td>
                 <td>{{ item.quantity }}</td>
                 <td>${{ item.get_total }}</td>
                 <td><div style="flex:2"><img class="row-image" src="{{item.product.imageURL}}"></div>

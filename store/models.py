@@ -39,7 +39,7 @@ class Producto(models.Model):
     @property
     def imageURL(self):
         try:
-            url = self.image.url
+            url = self.imagen.url
         except:
             url = ''
         return url
