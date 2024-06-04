@@ -471,11 +471,13 @@ def compras_cliente(request):
     return render(request, 'compras_cliente.html')
 
 #============================ Modo Cliente =========================================
-# def home_cliente(request):
-#     return render(request, 'store/home.html')
+def home_cliente(request):
+    return render(request, 'store/home_cliente.html')
 
 def view_products(request):
     categories = Categoria.objects.all()
+    print(categories)
+    print("hello i am in view products")
     products = Producto.objects.all()
     context = {
         'categories': categories,

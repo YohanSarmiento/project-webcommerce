@@ -6,7 +6,7 @@ from .views import *
 
 urlpatterns = [
     # path('', views.home, name='login'),
-    path('', views.home, name='home'),
+    path('', views.home, name='login'),
 
     path('productos/', views.productos, name='productos'),  # Listado de productos
     path('add_producto/', views.add_producto, name='add_producto'),
@@ -33,7 +33,7 @@ urlpatterns = [
     path('cancelar-reabastecimiento/<int:reabastecimiento_id>/', views.cancelar_reabastecimiento, name='cancelar_reabastecimiento'),
     path('confirmar-reabastecimiento/<int:reabastecimiento_id>/', views.confirmar_reabastecimiento, name='confirmar_reabastecimiento'),
     
-    # path('home/', views.home_cliente, name='home_cliente'),
+    
     path('catalogo/', views.catalogo, name='catalogo'),
     path('carrito/', views.compras_cliente, name='compras_cliente'),
     
@@ -48,7 +48,7 @@ urlpatterns = [
 
   
 
-
+    path('home_cliente/', views.home_cliente, name='home_cliente'),
     path('products/', views.view_products, name='view_products'),
     path('get-products-by-category/<int:category_id>/', views.get_products_by_category, name='get_products_by_category'),
     path('add-to-cart/<int:product_id>/', views.add_to_cart, name='add_to_cart'),
