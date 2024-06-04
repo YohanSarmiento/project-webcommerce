@@ -14,6 +14,10 @@ from django.forms.models import model_to_dict
 from django.core.paginator import Paginator
 from reportlab.pdfgen import canvas
 
+from django.http import JsonResponse
+from django.shortcuts import redirect
+from decimal import Decimal
+
 
 def home(request):
     return render(request, 'home.html')
@@ -457,25 +461,22 @@ def eliminar_ventas(request):
     return redirect('lista_ventas')
 
 
-def home_cliente(request):
-    return render(request, 'home_cliente.html')
+# def home_cliente(request):
+#     return render(request, 'home_cliente.html')
 
 def catalogo(request):
     return render(request, 'catalogo.html')
 
 def compras_cliente(request):
     return render(request, 'compras_cliente.html')
-from .models import Category, Product
-from django.http import JsonResponse
-from django.shortcuts import redirect
-from decimal import Decimal
 
-def home(request):
-    return render(request, 'store/home.html')
+#============================ Modo Cliente =========================================
+# def home_cliente(request):
+#     return render(request, 'store/home.html')
 
 def view_products(request):
-    categories = Category.objects.all()
-    products = Product.objects.all()
+    categories = Categoria.objects.all()
+    products = Producto.objects.all()
     context = {
         'categories': categories,
         'products': products
@@ -484,9 +485,9 @@ def view_products(request):
 
 def get_products_by_category(request, category_id):
     print(category_id)
-    categories = Category.objects.all()
-    selected_category = Category.objects.get(id=category_id)
-    products = Product.objects.filter(category=selected_category)
+    categories = Categoria.objects.all()
+    selected_category = Categoria.objects.get(id=category_id)
+    products = Producto.objects.filter(categoria=selected_category)
     products_data = []
     for product in products:
         product_data = {

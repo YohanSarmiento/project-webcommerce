@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Proveedor, Categoria, Producto, Cliente, Pedido, DetallePedido
+from .models import Proveedor, Categoria, Producto, Cliente, Order, OrderItem
 from .forms import ProductoForm
 from .models import *
 
@@ -34,29 +34,29 @@ class ClienteAdmin(admin.ModelAdmin):
 
 admin.site.register(Cliente, ClienteAdmin)
 
-class PedidoAdmin(admin.ModelAdmin):
-    list_display = ('cliente', 'fecha_pedido', 'estado_pedido')
-    search_fields = ('cliente__nombre', 'cliente__apellido', 'estado_pedido')
+# class PedidoAdmin(admin.ModelAdmin):
+#     list_display = ('cliente', 'fecha_pedido', 'estado_pedido')
+#     search_fields = ('cliente__nombre', 'cliente__apellido', 'estado_pedido')
 
-admin.site.register(Pedido, PedidoAdmin)
+# admin.site.register(Pedido, PedidoAdmin)
 
-class DetallePedidoAdmin(admin.ModelAdmin):
-    list_display = ('pedido', 'producto', 'cantidad', 'precio_unitario')
-    search_fields = ('pedido__cliente__nombre', 'pedido__cliente__apellido', 'producto__nombre')
+# class DetallePedidoAdmin(admin.ModelAdmin):
+#     list_display = ('pedido', 'producto', 'cantidad', 'precio_unitario')
+#     search_fields = ('pedido__cliente__nombre', 'pedido__cliente__apellido', 'producto__nombre')
 
-admin.site.register(DetallePedido, DetallePedidoAdmin)
+# admin.site.register(DetallePedido, DetallePedidoAdmin)
 
 
 # Register your models here.
 
-class CategoryAdmin(admin.ModelAdmin):
-    list_display = ("id", "name")
+# class CategoryAdmin(admin.ModelAdmin):
+#     list_display = ("id", "name")
 
-class ProductAdmin(admin.ModelAdmin):
-    list_display = ("id", "name", "price", "category", "description")
+# class ProductAdmin(admin.ModelAdmin):
+#     list_display = ("id", "name", "price", "category", "description")
 
-admin.site.register(Customer)
-admin.site.register(Category, CategoryAdmin)
-admin.site.register(Product, ProductAdmin)
+# admin.site.register(Customer)
+# admin.site.register(Category, CategoryAdmin)
+# admin.site.register(Product, ProductAdmin)
 admin.site.register(Order)
 admin.site.register(OrderItem)
