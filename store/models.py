@@ -81,6 +81,7 @@ class Cliente(models.Model):
 #     def __str__(self):
 #         return f"Pedido {self.pedido.id} - Producto: {self.producto.nombre} - Cantidad: {self.cantidad}"
     
+# Order is for shoppingcart
 class Order(models.Model):
     customer = models.ForeignKey(Cliente, on_delete=models.SET_NULL, null=True, blank=True)
     date_ordered = models.DateTimeField(auto_now_add=True)
