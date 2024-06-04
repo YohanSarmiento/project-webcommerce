@@ -1,0 +1,56 @@
+{% extends "master.html" %}
+
+{% block head %}
+<title>Lista de Reabastecimientos</title>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+{% endblock head %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="header-container">
+        <h1>Lista de Reabastecimientos</h1>
+    </div>
+    <!-- Botón para eliminar todos los registros de reabastecimiento -->
+    <form method="post" action="{% url 'eliminar_reabastecimiento' %}" style="display: inline;">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Eliminar todas los registros</button>
+    </form>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Proveedor</th>
+                <th>Cantidad</th>
+                <th>Fecha</th>
+                <th>Usuario</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for reabastecimiento in reabastecimientos %}
+            <tr>
+                <td>{{ reabastecimiento.producto.nombre }}</td>
+                <td>{{ reabastecimiento.producto.proveedor.nombre }}</td>
+                <td>{{ reabastecimiento.cantidad }}</td>
+                <td>{{ reabastecimiento.fecha }}</td>
+                <td>{{ reabastecimiento.usuario.username }}</td>
+                <td>{{ reabastecimiento.estado }}</td>
+                <td>
+                    {% if reabastecimiento.estado == 'pendiente' %}
+                    <a href="{% url 'confirmar_reabastecimiento' reabastecimiento.id %}" class="btn btn-primary btn-sm">Confirmar</a>
+                    <a href="{% url 'cancelar_reabastecimiento' reabastecimiento.id %}" class="btn btn-danger btn-sm">Cancelar</a>
+                    {% else %}
+                    Confirmado
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+{% endblock %}

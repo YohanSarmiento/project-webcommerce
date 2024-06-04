@@ -1,0 +1,30 @@
+{% extends "master.html" %}
+
+{% load static %}
+
+{% block head %}
+<!-- <script type="text/javascript" src="{% static 'js/index.js' %}"></script> -->
+<meta charset="UTF-8">
+<title>Confirmar Eliminación</title>
+<link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+{% endblock head %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h1 class="mb-4">Confirmar Eliminación</h1>
+        <p>¿Estás seguro de que deseas eliminar el producto "{{ producto.nombre }}"?</p>
+        <form method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Eliminar</button>
+            <a href="#" class="btn btn-secondary" onclick="window.history.back(); return false;">Cancelar</a>
+        </form>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- <script type="text/javascript" src="{% static 'js/home.js' %}"></script> -->
+{% endblock %}

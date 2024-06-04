@@ -1,0 +1,98 @@
+{% extends "master.html" %}
+{% load static %}
+
+{% block head %}
+<!-- <script type="text/javascript" src="{% static 'js/index.js' %}"></script> -->
+<meta charset="UTF-8">
+<title>Agregar Producto</title>
+<link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+{% endblock head %}
+
+{% block body %}
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">Agregar Producto</h1>
+        <form id="agregarProductoForm" method="POST" enctype="multipart/form-data" action="{% url 'add_producto' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="id_nombre" class="campo-requerido">Nombre:</label>
+                <input type="text" class="form-control" id="id_nombre" name="nombre" maxlength="100" required>
+            </div>
+            <div class="form-group">
+                <label for="id_precio" class="campo-requerido">Precio:</label>
+                <input type="number" class="form-control" id="id_precio" name="precio">
+            </div>
+            <div class="form-group">
+                <label for="id_descripcion" class="campo-requerido">Descripción:</label>
+                <textarea class="form-control" id="id_descripcion" name="descripcion" rows="4" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="id_stock" class="campo-requerido">Stock:</label>
+                <input type="number" class="form-control" id="id_stock" name="stock" required>
+            </div>
+            <div class="form-group">
+                <label for="id_proveedor" class="campo-requerido">Proveedor:</label>
+                <select class="form-control" id="id_proveedor" name="proveedor" required>
+                    {% for proveedor in proveedores %}
+                        <option value="{{ proveedor.id }}">{{ proveedor.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="id_categorias" class="campo-requerido">Categorias:</label>
+                <select class="form-control" id="id_categorias" name="categorias" multiple required>
+                    {% for categoria in categorias %}
+                        <option value="{{ categoria.id }}">{{ categoria.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="id_imagen">Imagen:</label>
+                <input type="file" class="form-control-file" id="id_imagen" name="imagen">
+            </div>
+            <button type="submit" class="btn btn-primary">Guardar Producto</button>
+        </form>
+        <div id="mensajeError" class="alert alert-danger mt-3" style="display: none;">
+            Por favor, complete todos los campos antes de guardar el producto.
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#agregarProductoForm').submit(function(event) {
+                var nombre = $('#id_nombre').val();
+                var precio = $('#id_precio').val();
+                var descripcion = $('#id_descripcion').val();
+                var stock = $('#id_stock').val();
+                var proveedor = $('#id_proveedor').val();
+                var categorias = $('#id_categorias').val();
+
+                if (nombre == '' || precio == '' || descripcion == '' || stock == '' || proveedor == '' || categorias == '' || imagen == '') {
+                    $('#mensajeError').show();
+                    event.preventDefault();
+                }
+            });
+        });
+    </script>
+</body>
+
+<style>
+    .mensaje-exito {
+        padding: 10px;
+        margin-bottom: 20px;
+        background-color: #d4edda;
+        border: 1px solid #c3e6cb;
+        color: #155724;
+        border-radius: 5px;
+    }
+
+    .campo-requerido::after {
+        content: "*";
+        color: red;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,80 @@
+{% extends "master.html" %}
+{% load static %}
+
+{% block head %}
+<meta charset="UTF-8">
+<title>Modificar Producto</title>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+{% endblock head %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="mb-4">Modificar Producto</h1>
+    <form method="POST" enctype="multipart/form-data" id="modificarProductoForm">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="id_nombre">Nombre:</label>
+            <input type="text" class="form-control" id="id_nombre" name="nombre" value="{{ producto.nombre }}" maxlength="100" required>
+            <small id="nombreHelp" class="form-text text-danger d-none">El nombre es requerido.</small>
+        </div>
+        <div class="form-group">
+            <label for="id_descripcion">Descripción:</label>
+            <textarea class="form-control" id="id_descripcion" name="descripcion" rows="3">{{ producto.descripcion }}</textarea>
+            <small id="descripcionHelp" class="form-text text-danger d-none">La descripción es requerida.</small>
+        </div>
+        <div class="form-group">
+            <label for="id_precio">Precio:</label>
+            <input type="number" class="form-control" id="id_precio" name="precio" value="{{ producto.precio }}">
+            <small id="precioHelp" class="form-text text-danger d-none">El precio es requerido.</small>
+        </div>
+        <div class="form-group">
+            <label for="id_stock">Stock:</label>
+            <input type="number" class="form-control" id="id_stock" name="stock" value="{{ producto.stock }}">
+            <small id="stockHelp" class="form-text text-danger d-none">El stock es requerido.</small>
+        </div>
+        <div class="form-group">
+            <label for="id_proveedor">Proveedor:</label>
+            <select class="form-control" id="id_proveedor" name="proveedor">
+                {% for proveedor in proveedores %}
+                <option value="{{ proveedor.id }}" {% if proveedor.id == producto.proveedor.id %} selected {% endif %}>{{ proveedor.nombre }}</option>
+                {% endfor %}
+            </select>
+            <small id="proveedorHelp" class="form-text text-danger d-none">El proveedor es requerido.</small>
+        </div>
+        <div class="form-group">
+            <label for="id_categorias">Categorías:</label>
+            <select class="form-control" id="id_categorias" name="categorias" multiple>
+                {% for categoria in categorias %}
+                <option value="{{ categoria.id }}" {% if categoria in producto.categorias.all %} selected {% endif %}>{{ categoria.nombre }}</option>
+                {% endfor %}
+            </select>
+            <small id="categoriasHelp" class="form-text text-danger d-none">Las categorías son requeridas.</small>
+        </div>
+        <div class="form-group">
+            <label for="id_imagen">Imagen:</label>
+            <input type="file" class="form-control-file" id="id_imagen" name="imagen">
+        </div>
+        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+    </form>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#modificarProductoForm').submit(function(event) {
+            var nombre = $('#id_nombre').val();
+            var descripcion = $('#id_descripcion').val();
+            var precio = $('#id_precio').val();
+            var stock = $('#id_stock').val();
+            var proveedor = $('#id_proveedor').val();
+            var categorias = $('#id_categorias').val();
+
+            if (nombre === '' || descripcion === '' || precio === '' || stock === '' || proveedor === null || categorias === null) {
+                event.preventDefault();
+                $('.form-text').removeClass('d-none');
+            }
+        });
+    });
+</script>
+{% endblock %}

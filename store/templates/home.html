@@ -3,33 +3,84 @@
 {% load static %}
 
 {% block head %}
-<title>Home | Flight</title>
-<!-- <script type="text/javascript" src="{% static 'js/index.js' %}"></script> -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home</title>
 <link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">
-
+<style>
+    .card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+    .card-body {
+        padding: 2rem;
+    }
+    .btn-lg {
+        padding: 1rem 2rem;
+        font-size: 1.2rem;
+        border-radius: 10px;
+        background-color: #0d6efd; /* Cambiar color de fondo del botón */
+        border: none;
+    }
+    .btn-lg:hover {
+        background-color: darkgreen; /* Cambiar color de fondo del botón al pasar el cursor */
+    }
+    .container-lg {
+        max-width: 900px;
+    }
+    .row {
+        margin-top: 50px;
+    }
+    .col-md-6 {
+        margin-bottom: 30px;
+    }
+</style>
 {% endblock head %}
 
 {% block body %}
-
-<body>
-    <div class="container-lg my-5">
-        <h2>responsive column widths</h2>
-        <div class="row gy-3"> <!-- manually change gutter using g{d}-{n} -->
-            <div class="col-sm-4 col-lg-6">
-                <div class="p-5 bg-primary text-light">col 1</div>
-                <h3>Hello!</h3>
+<div class="container-lg my-5">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card text-center">
+                <div class="card-body">
+                    <a href="{% url 'productos' %}" class="btn btn-primary btn-lg">PRODUCTOS</a>
+                </div>
             </div>
-            <div class="col-sm-4 col-lg-3">
-                <div class="p-5 bg-primary text-light">col 2</div>
+        </div>
+        <div class="col-md-6">
+            <div class="card text-center">
+                <div class="card-body">
+                    <a href="{% url 'proveedores' %}" class="btn btn-primary btn-lg">PROVEEDORES</a>
+                </div>
             </div>
-            <div class="col-sm-4 col-lg-3">
-                <div class="p-5 bg-primary text-light">col 3</div>
+        </div>
+        <div class="col-md-6 mt-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <a href="{% url 'inventario' %}" class="btn btn-primary btn-lg">INVENTARIO</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mt-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <a class="btn btn-primary btn-lg" href="{% url 'historial_cambios' %}">HISTORIAL CAMBIOS</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mt-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <a class="btn btn-primary btn-lg" href="{% url 'lista_reabastecimientos' %}">HISTORIAL PEDIDOS</a>
+                </div>
             </div>
         </div>
     </div>
-
-
-    <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- <script type="text/javascript" src="{% static 'js/home.js' %}"></script> -->
-</body>
+</div>
 {% endblock %}
