@@ -6,7 +6,7 @@ from .views import *
 
 urlpatterns = [
     # path('', views.home, name='login'),
-    path('', views.home, name='login'),
+    path('', views.home, name='home'),
 
     path('productos/', views.productos, name='productos'),  # Listado de productos
     path('add_producto/', views.add_producto, name='add_producto'),
