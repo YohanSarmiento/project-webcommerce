@@ -201,6 +201,17 @@ def agregar_proveedor(request):
 
     return render(request, 'agregar_proveedor.html', {'form': form})
 
+def agregar_categoria(request):
+    if request.method == 'POST':
+        form = CategoriaForm(request.POST)
+        if form.is_valid():
+            form.save()  # Guardar el formulario creará y guardará un nuevo Proveedor en la base de datos
+            return redirect('productos')  # Redirigir a la página de proveedores después de guardar el proveedor
+    else:
+        form = CategoriaForm()  # Si no es una solicitud POST, crea un formulario vacío
+
+    return render(request, 'agregar_categoria.html', {'form': form})
+
 def modificar_proveedor(request, proveedor_id):
     proveedor = Proveedor.objects.get(pk=proveedor_id)
     if request.method == 'POST':

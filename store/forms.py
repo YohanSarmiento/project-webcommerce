@@ -31,6 +31,11 @@ class ProveedorForm(forms.ModelForm):
     class Meta:
         model = Proveedor
         fields = ['nombre', 'direccion', 'telefono', 'correo_electronico']
+
+class CategoriaForm(forms.ModelForm):
+    class Meta:
+        model = Categoria
+        fields = ['nombre']
         
         
 #====================================== Separacion de inicio de sesion ========================================     
