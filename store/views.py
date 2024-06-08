@@ -212,6 +212,20 @@ def agregar_categoria(request):
 
     return render(request, 'agregar_categoria.html', {'form': form})
 
+def categorias(request):
+    categorias = Categoria.objects.all()
+    return render(request, 'categorias.html', {'categorias': categorias})
+
+def eliminar_categoria(request, categoria_id):
+    if request.method == 'POST':
+        categoria = Categoria.objects.get(pk=categoria_id)
+        categoria.delete()
+        messages.success(request, f'La categoria "{categoria.nombre}" ha sido eliminada correctamente.')
+        return redirect('categorias')
+    else:
+        categoria = Categoria.objects.get(pk=categoria_id)
+        return render(request, 'confirmar_eliminar_categoria.html', {'categoria': categoria})
+
 def modificar_proveedor(request, proveedor_id):
     proveedor = Proveedor.objects.get(pk=proveedor_id)
     if request.method == 'POST':

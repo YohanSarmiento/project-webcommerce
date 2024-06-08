@@ -19,9 +19,11 @@ urlpatterns = [
     path('cliente/<int:cliente_id>/modificar/', views.actualizar_cliente, name='actualizar_cliente'),
     path('cliente/<int:cliente_id>/eliminar/', views.eliminar_cliente, name='eliminar_cliente'),
     path('proveedores/', views.proveedores, name='proveedores'),
+    path('categorias/', views.categorias, name='categorias'),
     path('agregar_proveedor/', views.agregar_proveedor, name='agregar_proveedor'),
     path('proveedor/<int:proveedor_id>/modificar', views.modificar_proveedor, name='modificar_proveedor'),
     path('proveedor/<int:proveedor_id>/eliminar', views.eliminar_proveedor, name='eliminar_proveedor'),
+    path('categoria/<int:categoria_id>/eliminar', views.eliminar_categoria, name='eliminar_categoria'),
     
     path('invetario/', views.invetario, name='inventario'),  # Listado de INVENTARIO
     path('generar_reporte_inventario/', views.generar_reporte_inventario, name='generar_reporte_inventario'),
