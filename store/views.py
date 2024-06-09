@@ -532,7 +532,7 @@ def get_products_by_category(request, category_id):
 
 def view_cart(request):
     cart_items = OrderItem.objects.all()  # Assuming you have a CartItem model representing items in the cart
-    total_price = sum(item.product.price * item.quantity for item in cart_items)
+    total_price = sum(item.product.precio * item.quantity for item in cart_items)
     context = {
         'cart_items': cart_items,
         'total_price': total_price,
