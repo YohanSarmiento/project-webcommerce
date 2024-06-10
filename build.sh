@@ -11,5 +11,8 @@ python manage.py migrate
 # Convert static asset files
 python manage.py collectstatic --no-input
 
+# Flush the database (this will delete all data and re-create the database)
+python manage.py flush --no-input
+
 
 
