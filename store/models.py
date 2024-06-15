@@ -3,9 +3,14 @@ from django.contrib.auth.models import User
 from datetime import datetime
 from django.dispatch import receiver
 from django.db.models.signals import pre_save, post_save
-
+import uuid
+import os
 # Create your models here.
 
+def get_image_filename(instance, filename):
+    ext = filename.split('.')[-1]
+    filename = f"{uuid.uuid4()}.{ext}"
+    return os.path.join('product_images', filename)
 class Proveedor(models.Model):
     nombre = models.CharField(max_length=100)
     direccion = models.CharField(max_length=200)
@@ -31,7 +36,7 @@ class Producto(models.Model):
     stock = models.IntegerField()
     proveedor = models.ForeignKey(Proveedor, on_delete=models.CASCADE)
     categorias = models.ManyToManyField(Categoria, through='ProductoCategoria')
-    imagen = models.ImageField(upload_to='productos/', null=True, blank=True)  # Nuevo campo de imagen
+    imagen = models.ImageField(upload_to=get_image_filename, null=True, blank=True)  # Nuevo campo de imagen
 
     def __str__(self):
         return self.nombre
