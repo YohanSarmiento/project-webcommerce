@@ -10,7 +10,7 @@ import os
 def get_image_filename(instance, filename):
     ext = filename.split('.')[-1]
     filename = f"{uuid.uuid4()}.{ext}"
-    return os.path.join('product_images', filename)
+    return os.path.join('productos', filename)
 class Proveedor(models.Model):
     nombre = models.CharField(max_length=100)
     direccion = models.CharField(max_length=200)
