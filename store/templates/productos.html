@@ -145,7 +145,7 @@
                         {% endfor %}
                     </p>
                     {% if producto.imagen %}
-                        <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" class="img-fluid">
+                        <img src="{{ {{producto.imageURL}} }}" alt="{{ producto.nombre }}" class="img-fluid">
                     {% else %}
                         <p>No hay imagen disponible para este producto.</p>
                     {% endif %}
@@ -163,7 +163,7 @@
                     </div>
                     <div class="modal-body">
                         {% if producto.imagen %}
-                            <img src="{{ producto.imagen.url }}" class="img-fluid" alt="Imagen del producto">
+                            <img src="{{producto.imageURL}}" class="img-fluid" alt="Imagen del producto">
                         {% else %}
                             <p>No hay imagen disponible para este producto.</p>
                         {% endif %}
